@@ -82,3 +82,90 @@
 
 📦 **Repository:** (추가 예정)  
 📱 **Prototype:** (추가 예정)
+
+---
+
+## 🛠️ 개발 환경 구성
+
+### 프로젝트 구조
+
+```
+Cam-Kit/
+├── backend/        # Node.js 기반 REST API (Express + MongoDB)
+└── frontend/       # React(Vite) 기반 웹 클라이언트
+```
+
+### 백엔드 실행
+
+1. 의존성 설치
+   ```bash
+   cd backend
+   npm install
+   ```
+2. 환경 변수 파일 생성 (`env.example` 참고)
+   ```bash
+   cp env.example .env
+   ```
+   | 변수명 | 설명 |
+   |--------|------|
+   | `PORT` | API 서버 포트 (기본 4000) |
+| `MONGODB_URI` | MongoDB 연결 문자열 (dbName 미포함) |
+| `MONGODB_DB_NAME` | 사용할 데이터베이스 이름 |
+   | `JWT_SECRET` | JWT 서명용 비밀키 |
+   | `CLIENT_URL` | 프론트엔드 도메인 (CORS 허용) |
+   | `ADMIN_EMAILS` | 관리자 권한 이메일 목록 (쉼표 구분) |
+   | `SEED_PRODUCTS` | `true` 설정 시 서버 기동 시 기본 상품 데이터 삽입 |
+3. 개발 서버 기동
+   ```bash
+   npm run dev
+   ```
+
+### 프론트엔드 실행
+
+1. 의존성 설치
+   ```bash
+   cd frontend
+   npm install
+   ```
+2. 환경 변수 파일 생성 (`env.example` 참고)
+   ```bash
+   cp env.example .env
+   ```
+   - `VITE_API_URL` : 백엔드 API 엔드포인트 (기본 `http://localhost:4000/api`)
+3. 개발 서버 기동
+   ```bash
+   npm run dev
+   ```
+
+> 개발 중에는 `frontend`의 Vite 개발 서버가 `/api` 요청을 자동으로 `http://localhost:4000`으로 프록시합니다.
+
+---
+
+## ⚙️ 구현 기능 요약
+
+- **인증**
+  - 회원가입/로그인/로그아웃
+  - JWT + HttpOnly 쿠키 기반 세션 유지
+  - `ADMIN_EMAILS` 목록 기반 관리자 권한 부여
+- **상품 관리**
+  - MongoDB 연동 상품 CRUD
+  - 기본 상품 시드(`양파`, `대파`, `감자`) 자동 등록 옵션
+  - 프론트엔드에서 관리자 전용 상품 등록/수정/삭제 폼 제공
+- **주문 흐름**
+  - 사용자가 상품/수량 선택 후 주문 생성
+  - 재고 차감 및 주문 총액 계산
+  - 사용자: 자신의 주문 내역 확인
+  - 관리자: 전체 주문 조회 및 상태(pending/ready/completed/cancelled) 변경
+- **기타**
+  - 헬스 체크(`GET /api/health`)
+  - 공통 에러 응답 및 검증 메시지
+  - React Router 기반 페이지 라우팅 및 보호(ProtectedRoute)
+
+---
+
+## ✅ 향후 확장 아이디어
+
+- 결제 수단 연동(가상 계좌/간편결제)
+- 수령 보관함과의 실시간 연동 (QR 발급 및 사용 로그)
+- 주문 알림(이메일/푸시)
+- 관리자 대시보드 시각화(판매 통계, 재고 예측)
